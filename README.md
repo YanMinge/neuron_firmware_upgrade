@@ -8,4 +8,4 @@
 
 ## 使用步骤
 
-- 在shell 中输入 python neuron_firmware_upgrade.py -p [串口名称] -i [固件镜像的Path]
+- 在shell 中输入 `python neuron_firmware_upgrade.py -p [串口名称] -i [固件镜像的Path]`
