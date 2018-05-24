@@ -483,33 +483,33 @@ def receive_task():
     neuron_data_frame = bytearray()
     data_check_sum = 0
     while( True ):
-    	try：
-        	if(serialFd.inWaiting()):
-        	    char_temp = serialFd.read(serialFd.inWaiting())
-        	    ord_char_data = map(ord, char_temp)
-        	    for i in range(len(ord_char_data)):
-        	        if frame_status == NO_VALID_FRAME:
-        	            if ord_char_data[i] == FRAME_HEAD:
-        	                neuron_data_frame.append(ord_char_data[i])
-        	                frame_status = FRAME_HEAD_START
+        try:
+            if(serialFd.inWaiting()):
+                char_temp = serialFd.read(serialFd.inWaiting())
+                ord_char_data = map(ord, char_temp)
+                for i in range(len(ord_char_data)):
+                    if frame_status == NO_VALID_FRAME:
+                        if ord_char_data[i] == FRAME_HEAD:
+                            neuron_data_frame.append(ord_char_data[i])
+                            frame_status = FRAME_HEAD_START
 
-                	elif frame_status == FRAME_HEAD_START:
-                	    neuron_data_frame.append(ord_char_data[i])
-                	    if(ord_char_data[i] == FRAME_END):
-                	        for i in range(1,len(neuron_data_frame) - 2):
-                	            data_check_sum = (data_check_sum + neuron_data_frame[i]) & 0x7f
+                    elif frame_status == FRAME_HEAD_START:
+                        neuron_data_frame.append(ord_char_data[i])
+                        if(ord_char_data[i] == FRAME_END):
+                            for i in range(1,len(neuron_data_frame) - 2):
+                                data_check_sum = (data_check_sum + neuron_data_frame[i]) & 0x7f
 
-                    	    if neuron_data_frame[-2] == data_check_sum:
-                    	        process_neurons_responses(neuron_data_frame)
-                    	        neuron_data_frame = bytearray()
-                    	        data_check_sum = 0
-                    	        frame_status = NO_VALID_FRAME
-                    	    else:
-                    	        neuron_data_frame = bytearray()
-                    	        data_check_sum = 0
-                    	        frame_status = NO_VALID_FRAME
-        	else:
-        	    sleep(0.01)
+                            if neuron_data_frame[-2] == data_check_sum:
+                                process_neurons_responses(neuron_data_frame)
+                                neuron_data_frame = bytearray()
+                                data_check_sum = 0
+                                frame_status = NO_VALID_FRAME
+                            else:
+                                neuron_data_frame = bytearray()
+                                data_check_sum = 0
+                                frame_status = NO_VALID_FRAME
+            else:
+                sleep(0.01)
         except IOError:
             print('Stop receive task!')
 
