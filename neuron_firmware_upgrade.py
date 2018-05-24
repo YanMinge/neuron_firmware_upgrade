@@ -14,6 +14,9 @@ import os
 import codecs, binascii
 #import msvcrt
 from struct import pack, unpack
+import progressbar
+
+progress_bar = progressbar.ProgressBar()
 
 FRAME_HEAD = 0xf0
 FRAME_END = 0xf7
@@ -386,6 +389,7 @@ def transfer_file(serial,dev_id = 0x01):
             myfile.close()
             file_size = len(ord_data)
             frame_num = 0
+            progress_bar.start(file_size)
             send_header(serial, dev_id, ord_data)
             for i in range(0,file_size,64):
                 frame_num = i/64
@@ -396,7 +400,8 @@ def transfer_file(serial,dev_id = 0x01):
                 else:
                     ord_data_frame = ord_data[i:i+64]
                 send_file_data_frame(serial, dev_id, frame_num, ord_data_frame)
-            
+                progress_bar.update(i+1)
+            progress_bar.finish()
             result = check_update_status(serial, dev_id)
             if result == None or result[1] == 0x00:
                 print "firmware update failed!"
@@ -510,8 +515,8 @@ def receive_task():
                                 frame_status = NO_VALID_FRAME
             else:
                 sleep(0.01)
-        except IOError:
-            print('Stop receive task!')
+        except:
+            pass
 
 def timeCount_task():
     global timeCount

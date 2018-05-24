@@ -4,7 +4,8 @@
 ## 所需要的环境
 
 - python 2.7
-- 需要安装 pyserial 的库，以便串口的调用
+- 需要安装 pyserial 的库，最好是用 pip 安装 `python install pyserial`
+- 需要安装 progressbar2 的库，最好是用 pip 安装 `pip install progressbar2`
 
 ## 使用步骤
 
